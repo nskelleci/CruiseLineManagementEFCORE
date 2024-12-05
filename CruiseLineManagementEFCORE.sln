@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseLineManagementEFCORE.Module", "CruiseLineManagementEFCORE.Module\CruiseLineManagementEFCORE.Module.csproj", "{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseLineManagementEFCORE.WebApi", "CruiseLineManagementEFCORE.WebApi\CruiseLineManagementEFCORE.WebApi.csproj", "{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseLineManagementEFCORE.Win", "CruiseLineManagementEFCORE.Win\CruiseLineManagementEFCORE.Win.csproj", "{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseLineManagementEFCORE.Blazor.Server", "CruiseLineManagementEFCORE.Blazor.Server\CruiseLineManagementEFCORE.Blazor.Server.csproj", "{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CruiseLineManagementEFCORE.E2E.Tests", "CruiseLineManagementEFCORE.E2E.Tests\CruiseLineManagementEFCORE.E2E.Tests.csproj", "{F6711326-C4CD-4C50-80D0-D6859956EAA6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		EasyTest|Any CPU = EasyTest|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0538A3D2-0B0E-4AB9-8009-6C18A40451FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37F34E88-62A3-4A66-A8B6-9497FA3CAAD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11BDBEA8-ED40-4B6F-8A1E-78257C4534DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF717B2B-C8F7-489F-80DD-5DA39FCAD20B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6711326-C4CD-4C50-80D0-D6859956EAA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6711326-C4CD-4C50-80D0-D6859956EAA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6711326-C4CD-4C50-80D0-D6859956EAA6}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{F6711326-C4CD-4C50-80D0-D6859956EAA6}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{F6711326-C4CD-4C50-80D0-D6859956EAA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6711326-C4CD-4C50-80D0-D6859956EAA6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
