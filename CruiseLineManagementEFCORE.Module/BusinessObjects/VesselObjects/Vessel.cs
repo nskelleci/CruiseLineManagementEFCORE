@@ -1,6 +1,7 @@
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SeasonObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjects;
+using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.VesselSafetyObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
@@ -42,6 +43,11 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects
         public virtual string Length { get; set; }
 
 
+        public virtual ICollection<SurvivalCraftType> SurvivalCraftTypes { get; set; } = new ObservableCollection<SurvivalCraftType>();
+
+        public virtual ICollection<SurvivalCraft> SurvivalCrafts { get; set; } = new ObservableCollection<SurvivalCraft>();
+
+        public virtual ICollection<MusterStation> MusterStations { get; set; } = new ObservableCollection<MusterStation>();
         public virtual ICollection<Deck> Decks { get; set; } = new ObservableCollection<Deck>();
         public virtual ICollection<VesselSide> VesselSides { get; set; } = new ObservableCollection<VesselSide>();
         public virtual ICollection<VesselLocation> VesselLocations { get; set; } = new ObservableCollection<VesselLocation>();

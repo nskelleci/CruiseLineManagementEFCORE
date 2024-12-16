@@ -38,83 +38,83 @@ namespace CruiseLineManagementEFCORE.Module.Controllers
         }
         protected override void OnActivated()
         {
-            base.OnActivated();
+            //base.OnActivated();
 
-            var currentUser = (ApplicationUser)SecuritySystem.CurrentUser;
+            //var currentUser = (ApplicationUser)SecuritySystem.CurrentUser;
 
-            if (currentUser != null && currentUser.AssignedVessels.Any())
-            {
-                var assignedVesselIds = currentUser.AssignedVessels.Select(v => v.ID).ToList();
-                if (View is ListView listView)
-                {
-                    var objectType = View.ObjectTypeInfo.Type;
-                    var propertyPath = FindVesselRelationshipPath(objectType);
+            //if (currentUser != null && currentUser.AssignedVessels.Any())
+            //{
+            //    var assignedVesselIds = currentUser.AssignedVessels.Select(v => v.ID).ToList();
+            //    if (View is ListView listView)
+            //    {
+            //        var objectType = View.ObjectTypeInfo.Type;
+            //        var propertyPath = FindVesselRelationshipPath(objectType);
 
-                    if (!string.IsNullOrEmpty(propertyPath))
-                    {
-                        ApplyFilter(propertyPath, assignedVesselIds);
-                    }
-                }
-            }
+            //        if (!string.IsNullOrEmpty(propertyPath))
+            //        {
+            //            ApplyFilter(propertyPath, assignedVesselIds);
+            //        }
+            //    }
+            //}
         }
 
-        private void ApplyFilter(string propertyPath, IList<Guid> ids)
-        {
-            if (View is ListView listView)
-            {
-                if (propertyPath =="ID")
-                {
-                    var filterCriteria = new InOperator(propertyPath, ids);
-                    listView.CollectionSource.Criteria["GlobalFilter"] = filterCriteria;
-                }else {
-                    var filterCriteria = new InOperator(propertyPath+".ID", ids);
-                    listView.CollectionSource.Criteria["GlobalFilter"] = filterCriteria;
-                }
+        //private void ApplyFilter(string propertyPath, IList<Guid> ids)
+        //{
+        //    if (View is ListView listView)
+        //    {
+        //        if (propertyPath =="ID")
+        //        {
+        //            var filterCriteria = new InOperator(propertyPath, ids);
+        //            listView.CollectionSource.Criteria["GlobalFilter"] = filterCriteria;
+        //        }else {
+        //            var filterCriteria = new InOperator(propertyPath+".ID", ids);
+        //            listView.CollectionSource.Criteria["GlobalFilter"] = filterCriteria;
+        //        }
                 
-            }
-        }
+        //    }
+        //}
 
-        private string FindVesselRelationshipPath(Type objectType)
-        {
-            if (objectType == typeof(Vessel))
-            {
-                return "ID";
-            }
-            // Tüm BaseObject türevli sınıflar üzerinde çalış
-            var visitedTypes = new HashSet<Type>();
-            return FindVesselPathRecursive(objectType, visitedTypes);
-        }
+        //private string FindVesselRelationshipPath(Type objectType)
+        //{
+        //    if (objectType == typeof(Vessel))
+        //    {
+        //        return "ID";
+        //    }
+        //    // Tüm BaseObject türevli sınıflar üzerinde çalış
+        //    var visitedTypes = new HashSet<Type>();
+        //    return FindVesselPathRecursive(objectType, visitedTypes);
+        //}
 
-        private string FindVesselPathRecursive(Type type, HashSet<Type> visitedTypes)
-        {
-            // Ziyaret edilen tipleri kontrol et, tekrar kontrol yapma
-            if (visitedTypes.Contains(type)) return null;
-            visitedTypes.Add(type);
+        //private string FindVesselPathRecursive(Type type, HashSet<Type> visitedTypes)
+        //{
+        //    // Ziyaret edilen tipleri kontrol et, tekrar kontrol yapma
+        //    if (visitedTypes.Contains(type)) return null;
+        //    visitedTypes.Add(type);
 
-            // Tipin tüm public property'lerini al
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        //    // Tipin tüm public property'lerini al
+        //    var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var property in properties)
-            {
-                // Eğer property doğrudan Vessel ise, ilişki yolunu döndür
-                if (property.PropertyType == typeof(Vessel))
-                {
-                    return property.Name; // Örn: "Vessel"
-                }
+        //    foreach (var property in properties)
+        //    {
+        //        // Eğer property doğrudan Vessel ise, ilişki yolunu döndür
+        //        if (property.PropertyType == typeof(Vessel))
+        //        {
+        //            return property.Name; // Örn: "Vessel"
+        //        }
 
-                // Eğer property başka bir BaseObject türevi ise, rekürsif olarak kontrol et
-                if (typeof(BaseObject).IsAssignableFrom(property.PropertyType))
-                {
-                    var nestedPath = FindVesselPathRecursive(property.PropertyType, visitedTypes);
-                    if (!string.IsNullOrEmpty(nestedPath))
-                    {
-                        return $"{property.Name}.{nestedPath}"; // Örn: "Route.Vessel"
-                    }
-                }
-            }
+        //        // Eğer property başka bir BaseObject türevi ise, rekürsif olarak kontrol et
+        //        if (typeof(BaseObject).IsAssignableFrom(property.PropertyType))
+        //        {
+        //            var nestedPath = FindVesselPathRecursive(property.PropertyType, visitedTypes);
+        //            if (!string.IsNullOrEmpty(nestedPath))
+        //            {
+        //                return $"{property.Name}.{nestedPath}"; // Örn: "Route.Vessel"
+        //            }
+        //        }
+        //    }
 
-            return null; // Vessel ile ilişki bulunamadı
-        }
+        //    return null; // Vessel ile ilişki bulunamadı
+        //}
         protected override void OnViewControlsCreated()
         {
             base.OnViewControlsCreated();
@@ -123,8 +123,8 @@ namespace CruiseLineManagementEFCORE.Module.Controllers
         protected override void OnDeactivated()
         {
             // Unsubscribe from previously subscribed events and release other references and resources.
-            if (View is ListView listView)
-                listView.CollectionSource.Criteria.Remove("GlobalFilter");
+            //if (View is ListView listView)
+            //    listView.CollectionSource.Criteria.Remove("GlobalFilter");
 
             base.OnDeactivated();
         }

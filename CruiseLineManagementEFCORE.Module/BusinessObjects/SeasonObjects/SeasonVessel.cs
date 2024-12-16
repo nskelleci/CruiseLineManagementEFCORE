@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,8 +27,10 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.SeasonObjects
     // Specify more UI options using a declarative approach (https://documentation.devexpress.com/#eXpressAppFramework/CustomDocument112701).
     // You do not need to implement the INotifyPropertyChanged interface - EF Core implements it automatically.
     // (see https://learn.microsoft.com/en-us/ef/core/change-tracking/change-detection#change-tracking-proxies for details).
+
     public class SeasonVessel : BaseObject
     {
+        
         public SeasonVessel()
         {
             // In the constructor, initialize collection properties, e.g.: 
@@ -34,20 +38,32 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.SeasonObjects
         }
         [VisibleInListView(false)]
         [VisibleInDetailView(false)]
+        [VisibleInLookupListView(false)]
+        
         public virtual Guid SeasonID { get; set; }
-            public virtual Season Season { get; set; }
+        public virtual Season Season { get; set; }
+
+
 
         [VisibleInListView(false)]
         [VisibleInDetailView(false)]
+        [VisibleInLookupListView(false)]
         public virtual Guid VesselID { get; set; }
         [DisplayName("Vessel")]
         public virtual Vessel Vessel { get; set; }
 
-            public virtual bool IsSeasonActive { get; set; }
+        public virtual bool IsSeasonActive { get; set; }
 
-            public virtual ICollection<Cruise> Cruises { get; set; } = new ObservableCollection<Cruise>();
+        public virtual ICollection<Cruise> Cruises { get; set; } = new ObservableCollection<Cruise>();
 
-        
+        [NotMapped]
+        public virtual string VesselAndSeasonNameSV
+        {
+            get
+            {
+                return Season.Name + " | " + Vessel.Name;
+            }
+        }
 
     }
 }

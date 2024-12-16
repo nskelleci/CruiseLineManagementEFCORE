@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
-  <Options UIType="TabbedMDI"
-         RestoreTabbedMdiLayout="False"
-         ShowTabImage="True">
-  </Options>
   <NavigationItems NavigationStyle="Accordion">
     <Items>
       <Item Id="KPI" Removed="True" />
@@ -14,4 +10,42 @@
       </Item>
     </Items>
   </NavigationItems>
+  <Options UIType="TabbedMDI" RestoreTabbedMdiLayout="False" ShowTabImage="True" />
+  <SchemaModules>
+    <SchemaModule Name="SchedulerBlazorModule" Version="24.1.7.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="24.1.7.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="24.1.7.0" IsNewNode="True" />
+  </SchemaModules>
+  <Views>
+    <ListView Id="Cruise_ItineraryDays_ListView">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+        <ColumnInfo Id="DepartureDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+      </Columns>
+    </ListView>
+    <ListView Id="CruisePort_ItineraryDays_ListView">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+        <ColumnInfo Id="DepartureDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+      </Columns>
+    </ListView>
+    <DetailView Id="ItineraryDay_DetailView">
+      <Items>
+        <PropertyEditor Id="ArrivalDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+        <PropertyEditor Id="DepartureDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+      </Items>
+    </DetailView>
+    <ListView Id="ItineraryDay_ListView">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+        <ColumnInfo Id="DepartureDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+      </Columns>
+    </ListView>
+    <ListView Id="ItineraryDay_LookupListView">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+        <ColumnInfo Id="DepartureDateTime" PropertyEditorType="CruiseLineManagementEFCORE.Blazor.Server.Controllers.CustomDateTimePropertyEditor" />
+      </Columns>
+    </ListView>
+  </Views>
 </Application>

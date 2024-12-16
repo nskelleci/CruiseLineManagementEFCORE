@@ -1,6 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Title="CruiseLineManagementEFCORE">
+  <ActionDesign>
+    <Actions>
+      <Action Id="New" DefaultItemMode="FirstActiveItem" ShowItemsOnClick="False" />
+    </Actions>
+  </ActionDesign>
   <BOModel>
+    <Class Name="CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.Cruise">
+      <OwnMembers>
+        <Member Name="SeasonVessel" DataSourceProperty="" DisplayFormat="" LookupProperty="" />
+      </OwnMembers>
+    </Class>
+    <Class Name="CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.ItineraryDay">
+      <OwnMembers>
+        <Member Name="ArrivalDateTime" DisplayFormat="MM/dd/yy hh:mm:ss" EditMask="MM/dd/yy hh:mm:ss" />
+        <Member Name="DepartureDateTime" DisplayFormat="MMdd/yy hh:mm:ss" EditMask="MM/dd/yy hh:mm:ss" LookupEditorMode="AllItems" />
+      </OwnMembers>
+    </Class>
     <Class Name="DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyUser" Caption="Base User" />
   </BOModel>
   <NavigationItems>
@@ -17,6 +33,41 @@
   </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
+    <DetailView Id="Cruise_DetailView">
+      <Items>
+        <PropertyEditor Id="SeasonVessel" PropertyName="SeasonVessel" LookupProperty="" DisplayFormat="" />
+      </Items>
+    </DetailView>
+    <ListView Id="Cruise_ItineraryDays_ListView" NewItemRowPosition="Bottom" AllowLink="False" AllowUnlink="False" AllowEdit="True" AllowNew="True">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" DisplayFormat="{0:g}" EditMask="" />
+        <ColumnInfo Id="DepartureDateTime" DisplayFormat="{0:g}" EditMask="" />
+      </Columns>
+    </ListView>
+    <ListView Id="CruisePort_ItineraryDays_ListView" AllowDelete="False" AllowLink="False" AllowNew="False">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" DisplayFormat="{0:g}" EditMask="" />
+        <ColumnInfo Id="DepartureDateTime" DisplayFormat="{0:g}" EditMask="" />
+      </Columns>
+    </ListView>
+    <DetailView Id="ItineraryDay_DetailView">
+      <Items>
+        <PropertyEditor Id="ArrivalDateTime" DisplayFormat="{0:g}" EditMask="" />
+        <PropertyEditor Id="DepartureDateTime" DisplayFormat="{0:g}" EditMask="" />
+      </Items>
+    </DetailView>
+    <ListView Id="ItineraryDay_ListView" NewItemRowPosition="Bottom">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" DisplayFormat="{0:g}" EditMask="" />
+        <ColumnInfo Id="DepartureDateTime" DisplayFormat="{0:g}" EditMask="" />
+      </Columns>
+    </ListView>
+    <ListView Id="ItineraryDay_LookupListView">
+      <Columns>
+        <ColumnInfo Id="ArrivalDateTime" DisplayFormat="{0:g}" EditMask="" />
+        <ColumnInfo Id="DepartureDateTime" DisplayFormat="{0:g}" EditMask="" />
+      </Columns>
+    </ListView>
     <ListView Id="KpiDefinition_ListView">
       <Columns>
         <ColumnInfo Id="Criteria" Width="48" />
@@ -51,8 +102,8 @@
     <ListView Id="Vessel_SeasonVessels_ListView">
       <Columns>
         <ColumnInfo Id="SeasonID" Width="166" />
-        <ColumnInfo Id="Season" Width="185" />
         <ColumnInfo Id="VesselID" Width="213" />
+        <ColumnInfo Id="Season" Width="185" />
         <ColumnInfo Id="IsSeasonActive" Width="291" />
       </Columns>
     </ListView>

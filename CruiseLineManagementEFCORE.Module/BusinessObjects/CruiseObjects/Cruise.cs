@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -38,20 +39,45 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects
 
         [VisibleInListView(false)]
         [VisibleInDetailView(false)]
+        [VisibleInLookupListView(false)]
         public virtual Guid SeasonVesselID { get; set; }
 
-        [VisibleInListView(false)]
-        [VisibleInDetailView(false)]
+        [VisibleInListView(true)]
+        [VisibleInDetailView(true)]
+        [DisplayName("Season | Vessel")]
+        [VisibleInLookupListView(true)]
         public virtual SeasonVessel SeasonVessel { get; set; }
-
-        [NotMapped]
-        public virtual string VesselAndSeasonName
+     
+        public virtual DateTime StartDateTime
         {
-            get
-            {
-                return SeasonVessel.Season.Name+" | "+ SeasonVessel.Vessel.Name;
-            }
+            get;set;
         }
+
+        public virtual DateTime EndDateTime
+        {
+            get; set;
+
+        }
+
+
+
+
+
         public virtual ICollection<CruisePassenger> CruisePassengers { get; set; } = new ObservableCollection<CruisePassenger>();
+        public virtual ICollection<ItineraryDay> ItineraryDays { get; set; } = new ObservableCollection<ItineraryDay>();
+
+
+        //[NotMapped]
+        //public virtual string VesselAndSeasonName
+        //{
+        //    get
+        //    {
+        //        if (SeasonVessel == null)
+        //        {
+        //            return "";
+        //        }
+        //        return SeasonVessel.Season.Name +" | "+ SeasonVessel.Vessel.Name;
+        //    }
+        //}
     }
 }

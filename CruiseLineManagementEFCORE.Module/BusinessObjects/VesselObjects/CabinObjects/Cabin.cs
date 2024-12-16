@@ -1,3 +1,4 @@
+using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.VesselSafetyObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
@@ -69,6 +70,16 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinO
         public virtual Guid CabinBedTypeID { get; set; }
         public virtual CabinBedType CabinBedType { get; set; }
 
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid MusterStationID { get; set; }
+        public virtual MusterStation MusterStation { get; set; }
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid SurvivalCraftID { get; set; }
+        public virtual SurvivalCraft SurvivalCraft { get; set; }
 
         // You can use the regular Code First syntax.
         // Property change notifications will be created automatically.

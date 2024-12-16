@@ -31,6 +31,17 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.Vessel
             // this.AssociatedEntities = new ObservableCollection<AssociatedEntityObject>();
         }
 
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid VesselID { get; set; }
+        public virtual Vessel Vessel { get; set; }
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual ICollection<SurvivalCraft> SurvivalCrafts { get; set; } = new ObservableCollection<SurvivalCraft>();
         // You can use the regular Code First syntax.
         // Property change notifications will be created automatically.
         // (see https://learn.microsoft.com/en-us/ef/core/change-tracking/change-detection#change-tracking-proxies for details)

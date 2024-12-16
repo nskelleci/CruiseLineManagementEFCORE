@@ -1,5 +1,4 @@
-using CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects;
-using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjects;
+using CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
@@ -15,9 +14,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.VesselSafetyObjects
+namespace CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects
 {
-    // Register this entity in your DbContext (usually in the BusinessObjects folder of your project) with the "public DbSet<MusterStation> MusterStations { get; set; }" syntax.
+    // Register this entity in your DbContext (usually in the BusinessObjects folder of your project) with the "public DbSet<CruisePort> CruisePorts { get; set; }" syntax.
     [DefaultClassOptions]
     //[ImageName("BO_Contact")]
     //[DefaultProperty("Name")]
@@ -25,36 +24,25 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.Vessel
     // Specify more UI options using a declarative approach (https://documentation.devexpress.com/#eXpressAppFramework/CustomDocument112701).
     // You do not need to implement the INotifyPropertyChanged interface - EF Core implements it automatically.
     // (see https://learn.microsoft.com/en-us/ef/core/change-tracking/change-detection#change-tracking-proxies for details).
-    public class MusterStation : BaseObject
+    public class CruisePort : BaseObject
     {
-        public MusterStation()
+        public CruisePort()
         {
             // In the constructor, initialize collection properties, e.g.: 
             // this.AssociatedEntities = new ObservableCollection<AssociatedEntityObject>();
         }
 
         public virtual string Name { get; set; }
-        public virtual string Description { get; set; }
-
-        [VisibleInListView(false)]
-        [VisibleInDetailView(false)]
-        public virtual Guid VesselLocationID { get; set; }
-        public virtual VesselLocation VesselLocation { get; set; }
-
+        public virtual string Description { get; set; } = string.Empty;
 
 
         [VisibleInListView(false)]
         [VisibleInDetailView(false)]
-        public virtual Guid VesselID { get; set; }
-        public virtual Vessel Vessel { get; set; }
-
-        [VisibleInListView(false)]
-        [VisibleInDetailView(false)]
-        public virtual ICollection<Cabin> Cabins{get; set;} = new ObservableCollection<Cabin>();
+        public virtual Guid CruisePortCityID { get; set; }
+        public virtual CruisePortCity CruisePortCity { get; set; }
 
 
-        [VisibleInListView(false)]
-        [VisibleInDetailView(false)]
-        public virtual ICollection<SurvivalCraft> SurvivalCrafts { get; set; } = new ObservableCollection<SurvivalCraft>();
+        public virtual ICollection<ItineraryDay> ItineraryDays { get; set; } = new ObservableCollection<ItineraryDay>();
+
     }
 }

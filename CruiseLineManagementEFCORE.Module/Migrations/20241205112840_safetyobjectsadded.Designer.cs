@@ -4,6 +4,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CruiseLineManagementEFCORE.Module.Migrations
 {
     [DbContext(typeof(CruiseLineManagementEFCOREEFCoreDbContext))]
-    partial class CruiseLineManagementEFCOREEFCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241205112840_safetyobjectsadded")]
+    partial class safetyobjectsadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,9 +75,6 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("EndDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -84,9 +84,6 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                     b.Property<Guid>("SeasonVesselID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("ID");
 
                     b.HasIndex("SeasonID");
@@ -94,109 +91,6 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                     b.HasIndex("SeasonVesselID");
 
                     b.ToTable("Cruises");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.ItineraryDay", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ArrivalDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CruiseID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CruisePortID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DayNumber")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DepartureDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CruiseID");
-
-                    b.HasIndex("CruisePortID");
-
-                    b.ToTable("ItineraryDay");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePort", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CruisePortCityID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CruisePortCityID");
-
-                    b.ToTable("CruisePort");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCity", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CruisePortCountryID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CruisePortCountryID");
-
-                    b.ToTable("CruisePortCity");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCountry", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CruisePortCountryCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CruisePortCountryFlag")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CruisePortCountryLocalCurrency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CruisePortCountryLocalLanguage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("CruisePortCountry");
                 });
 
             modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects.CruisePassenger", b =>
@@ -1356,53 +1250,12 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                     b.Navigation("SeasonVessel");
                 });
 
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.ItineraryDay", b =>
-                {
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.Cruise", "Cruise")
-                        .WithMany("ItineraryDays")
-                        .HasForeignKey("CruiseID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePort", "CruisePort")
-                        .WithMany("ItineraryDays")
-                        .HasForeignKey("CruisePortID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Cruise");
-
-                    b.Navigation("CruisePort");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePort", b =>
-                {
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCity", "CruisePortCity")
-                        .WithMany("CruisePorts")
-                        .HasForeignKey("CruisePortCityID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CruisePortCity");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCity", b =>
-                {
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCountry", "CruisePortCountry")
-                        .WithMany("CruisePortCities")
-                        .HasForeignKey("CruisePortCountryID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CruisePortCountry");
-                });
-
             modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects.CruisePassenger", b =>
                 {
                     b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.Cruise", "Cruise")
                         .WithMany("CruisePassengers")
                         .HasForeignKey("CruiseID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects.Passenger", "Passenger")
@@ -1837,23 +1690,6 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
             modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.Cruise", b =>
                 {
                     b.Navigation("CruisePassengers");
-
-                    b.Navigation("ItineraryDays");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePort", b =>
-                {
-                    b.Navigation("ItineraryDays");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCity", b =>
-                {
-                    b.Navigation("CruisePorts");
-                });
-
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects.CruisePortCountry", b =>
-                {
-                    b.Navigation("CruisePortCities");
                 });
 
             modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects.CruisePassenger", b =>

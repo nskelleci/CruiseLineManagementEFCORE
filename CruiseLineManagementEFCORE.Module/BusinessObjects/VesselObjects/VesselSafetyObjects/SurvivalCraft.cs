@@ -1,3 +1,5 @@
+using CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects;
+using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
@@ -31,6 +33,38 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.Vessel
             // this.AssociatedEntities = new ObservableCollection<AssociatedEntityObject>();
         }
 
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
+        public virtual int Capacity { get; set; }
+
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid VesselID { get; set; }
+        public virtual Vessel Vessel { get; set; }
+
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid MusterStationID { get; set; }
+        public virtual MusterStation MusterStation { get; set; }
+
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid SurvivalCraftTypeID { get; set; }
+        public virtual SurvivalCraftType SurvivalCraftType { get; set; }
+
+
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual Guid VesselLocationID { get; set; }
+        public virtual VesselLocation VesselLocation { get; set; }
+
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        public virtual ICollection<Cabin> Cabins { get; set; } = new ObservableCollection<Cabin>();
         // You can use the regular Code First syntax.
         // Property change notifications will be created automatically.
         // (see https://learn.microsoft.com/en-us/ef/core/change-tracking/change-detection#change-tracking-proxies for details)

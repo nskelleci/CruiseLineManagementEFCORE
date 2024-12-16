@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <Views Id="Views">
+    <ListView Id="ItineraryDay_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="ArrivalTime" EditMaskType="DateTime" />
+        <ColumnInfo Id="DepartureTime" DisplayFormat="" EditMaskType="DateTime" />
+      </Columns>
+    </ListView>
+  </Views>
+</Application>

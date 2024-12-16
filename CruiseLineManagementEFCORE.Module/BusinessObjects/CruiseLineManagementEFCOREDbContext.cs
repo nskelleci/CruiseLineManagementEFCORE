@@ -14,6 +14,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjec
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SalesObjects;
+using CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects;
 
 namespace CruiseLineManagementEFCORE.Module.BusinessObjects;
 
@@ -141,6 +142,18 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .WithMany(ss => ss.Cruises)
             .HasForeignKey(c => new { c.SeasonVesselID });
 
+        modelBuilder.Entity<Cruise>()
+            .HasMany(c => c.CruisePassengers)
+            .WithOne(cp => cp.Cruise)
+            .HasForeignKey(cp => cp.CruiseID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Cruise>()
+            .HasMany(c => c.ItineraryDays)
+            .WithOne(id => id.Cruise)
+            .HasForeignKey(id => id.CruiseID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
         // CruisePassenger primary key
         modelBuilder.Entity<CruisePassenger>()
             .HasKey(cp => new { cp.CruiseID, cp.PassengerID });
@@ -246,6 +259,11 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .HasForeignKey(c => c.VesselSideID)
             .OnDelete(DeleteBehavior.NoAction);
 
+        modelBuilder.Entity<Cabin>()
+            .HasOne(c => c.MusterStation)
+            .WithMany(ms => ms.Cabins)
+            .HasForeignKey(c => c.MusterStationID)
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<CabinCategory>()
             .HasOne(cc => cc.Vessel)
@@ -306,6 +324,103 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .OnDelete(DeleteBehavior.NoAction);
 
 
+
+        modelBuilder.Entity<MusterStation>()
+            .HasOne(ms => ms.Vessel)
+            .WithMany(v => v.MusterStations)
+            .HasForeignKey(ms => ms.VesselID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<MusterStation>()
+            .HasMany(ms => ms.SurvivalCrafts)
+            .WithOne(sc => sc.MusterStation)
+            .HasForeignKey(sc => sc.MusterStationID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<MusterStation>()
+            .HasMany(ms => ms.Cabins)
+            .WithOne(sc => sc.MusterStation)
+            .HasForeignKey(sc => sc.MusterStationID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+
+        modelBuilder.Entity<SurvivalCraft>()
+            .HasOne(sc => sc.MusterStation)
+            .WithMany(ms => ms.SurvivalCrafts)
+            .HasForeignKey(sc => sc.MusterStationID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<SurvivalCraft>()
+            .HasOne(sc => sc.SurvivalCraftType)
+            .WithMany(sct => sct.SurvivalCrafts)
+            .HasForeignKey(sc => sc.SurvivalCraftTypeID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<SurvivalCraft>()
+            .HasOne(sc => sc.Vessel)
+            .WithMany(v => v.SurvivalCrafts)
+            .HasForeignKey(sc => sc.VesselID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<SurvivalCraft>()
+            .HasOne(sc => sc.VesselLocation);
+        modelBuilder.Entity<SurvivalCraft>()
+            .HasMany(sc => sc.Cabins)
+            .WithOne(c => c.SurvivalCraft)
+            .HasForeignKey(c => c.SurvivalCraftID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+        modelBuilder.Entity<SurvivalCraftType>()
+            .HasOne(sct => sct.Vessel)
+            .WithMany(v => v.SurvivalCraftTypes)
+            .HasForeignKey(sct => sct.VesselID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<SurvivalCraftType>()
+            .HasMany(sct => sct.SurvivalCrafts)
+            .WithOne(sc => sc.SurvivalCraftType)
+            .HasForeignKey(sc => sc.SurvivalCraftTypeID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+        modelBuilder.Entity<CruisePort>()
+            .HasOne(cp => cp.CruisePortCity)
+            .WithMany(cpc => cpc.CruisePorts)
+            .HasForeignKey(cp => cp.CruisePortCityID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<CruisePort>()
+            .HasMany(cp=> cp.ItineraryDays)
+            .WithOne(id => id.CruisePort)
+            .HasForeignKey(id => id.CruisePortID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+
+        modelBuilder.Entity<CruisePortCity>()
+            .HasMany(cpc => cpc.CruisePorts)
+            .WithOne(cp => cp.CruisePortCity)
+            .HasForeignKey(cp => cp.CruisePortCityID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<CruisePortCity>()
+            .HasOne(cpc => cpc.CruisePortCountry)
+            .WithMany(c => c.CruisePortCities)
+            .HasForeignKey(cpc => cpc.CruisePortCountryID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+        modelBuilder.Entity<CruisePortCountry>()
+            .HasMany(cpc => cpc.CruisePortCities)
+            .WithOne(c => c.CruisePortCountry)
+            .HasForeignKey(cpc => cpc.CruisePortCountryID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+        modelBuilder.Entity<ItineraryDay>()
+            .HasOne(id => id.Cruise)
+            .WithMany(c => c.ItineraryDays)
+            .HasForeignKey(id => id.CruiseID)
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<ItineraryDay>()
+            .HasOne(id => id.CruisePort)
+            .WithMany(cp => cp.ItineraryDays)
+            .HasForeignKey(id => id.CruisePortID)
+            .OnDelete(DeleteBehavior.NoAction);
 
 
         #endregion
