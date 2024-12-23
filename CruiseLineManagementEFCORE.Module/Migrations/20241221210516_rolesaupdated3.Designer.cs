@@ -4,6 +4,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CruiseLineManagementEFCORE.Module.Migrations
 {
     [DbContext(typeof(CruiseLineManagementEFCOREEFCoreDbContext))]
-    partial class CruiseLineManagementEFCOREEFCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241221210516_rolesaupdated3")]
+    partial class rolesaupdated3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

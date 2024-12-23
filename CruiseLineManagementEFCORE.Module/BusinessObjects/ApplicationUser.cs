@@ -19,8 +19,13 @@ public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo,
     [Browsable(false)]
     [DevExpress.ExpressApp.DC.Aggregated]
     public virtual IList<ApplicationUserLoginInfo> UserLogins { get; set; } = new ObservableCollection<ApplicationUserLoginInfo>();
+    public ApplicationUser()
+    {
+      
+    }
 
-    public virtual ICollection<Vessel> AssignedVessels{get; set;} = new ObservableCollection<Vessel>();
+    //public virtual ICollection<Vessel> AssignedVessels{get; set;} = new ObservableCollection<Vessel>();
+
     IEnumerable<ISecurityUserLoginInfo> IOAuthSecurityUser.UserLogins => UserLogins.OfType<ISecurityUserLoginInfo>();
 
     ISecurityUserLoginInfo ISecurityUserWithLoginInfo.CreateUserLoginInfo(string loginProviderName, string providerUserKey) {

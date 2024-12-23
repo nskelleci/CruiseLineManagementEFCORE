@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.EntityFrameworkCore;
 using CruiseLineManagementEFCORE.Blazor.Server.Services;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
+using CruiseLineManagementEFCORE.Module.BusinessObjects;
 
 namespace CruiseLineManagementEFCORE.Blazor.Server;
 
@@ -95,11 +96,12 @@ public class Startup {
             builder.Security
                 .UseIntegratedMode(options => {
                     options.Lockout.Enabled = true;
-
                     options.RoleType = typeof(PermissionPolicyRole);
+                    
                     // ApplicationUser descends from PermissionPolicyUser and supports the OAuth authentication. For more information, refer to the following topic: https://docs.devexpress.com/eXpressAppFramework/402197
                     // If your application uses PermissionPolicyUser or a custom user type, set the UserType property as follows:
                     options.UserType = typeof(CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUser);
+                 
                     // ApplicationUserLoginInfo is only necessary for applications that use the ApplicationUser user type.
                     // If you use PermissionPolicyUser or a custom user type, comment out the following line:
                     options.UserLoginInfoType = typeof(CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUserLoginInfo);
@@ -117,6 +119,8 @@ public class Startup {
                 .AddPasswordAuthentication(options => {
                     options.IsSupportChangePassword = true;
                 });
+
+            
         });
         var authentication = services.AddAuthentication(options => {
             options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

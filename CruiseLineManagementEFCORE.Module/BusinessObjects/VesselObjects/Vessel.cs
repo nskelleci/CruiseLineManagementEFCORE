@@ -1,3 +1,4 @@
+using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SeasonObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjects;
@@ -57,7 +58,6 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects
         public virtual ICollection<CabinType> CabinTypes{ get; set; } = new ObservableCollection<CabinType>();
         public virtual ICollection<CabinBedType> CabinBedTypes { get; set; } = new ObservableCollection<CabinBedType>();
 
-        public virtual ICollection<ApplicationUser> AssignedUsers { get; set; } = new ObservableCollection<ApplicationUser>();
         public virtual ICollection<SeasonVessel> SeasonVessels { get; set; } = new ObservableCollection<SeasonVessel>();
         //public virtual ICollection<Cruise> Cruises { get; set; } = new ObservableCollection<Cruise>();
         [NotMapped]
@@ -71,5 +71,8 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects
             }
         }
 
+        public virtual ICollection<GlobalUser> GlobalUsers { get; set; } = new ObservableCollection<GlobalUser>();
+        public virtual ICollection<Crew> Crews { get; set; } = new ObservableCollection<Crew>();
+        public virtual ICollection<ExtendedRole> CrewRoles { get; set; } = new ObservableCollection<ExtendedRole>();
     }
 }

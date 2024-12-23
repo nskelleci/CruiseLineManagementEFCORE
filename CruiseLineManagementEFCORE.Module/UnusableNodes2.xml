@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <Views Id="Views">
+    <DetailView Id="Crew_DetailView">
+      <Items Id="Items">
+        <PropertyEditor Id="AssignedVessels" Removed="True" />
+      </Items>
+    </DetailView>
+  </Views>
+</Application>

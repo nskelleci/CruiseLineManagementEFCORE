@@ -21,6 +21,8 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SalesObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.VesselSafetyObjects;
+using DevExpress.Xpo;
+using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
 
 namespace CruiseLineManagementEFCORE.Module.DatabaseUpdate;
 //https://localhost:44318/Vessel_DetailView/c9cbc4d1-666f-4d3b-ec47-08dd1304055e
@@ -39,31 +41,30 @@ public class Updater : ModuleUpdater {
         // If a role doesn't exist in the database, create this role
         var defaultRole = CreateDefaultRole();
         var adminRole = CreateAdminRole();
-        CreateVesselUserRole();
-        CreateVesselAdminRole();
+        
         ObjectSpace.CommitChanges(); //This line persists created object(s).
 
         UserManager userManager = ObjectSpace.ServiceProvider.GetRequiredService<UserManager>();
         // If a user named 'User' doesn't exist in the database, create this user
-        if(userManager.FindUserByName<ApplicationUser>(ObjectSpace, "User") == null) {
+        if(userManager.FindUserByName<GlobalUser>(ObjectSpace, "GlobalUser") == null) {
             // Set a password if the standard authentication type is used
             string EmptyPassword = "";
-            _ = userManager.CreateUser<ApplicationUser>(ObjectSpace, "User", EmptyPassword, (user) => {
+            _ = userManager.CreateUser<GlobalUser>(ObjectSpace, "GlobalUser", EmptyPassword, (user) => {
                 // Add the Users role to the user
                 user.Roles.Add(defaultRole);
             });
         }
 
         // If a user named 'Admin' doesn't exist in the database, create this user
-        if(userManager.FindUserByName<ApplicationUser>(ObjectSpace, "Admin") == null) {
+        if(userManager.FindUserByName<GlobalUser>(ObjectSpace, "SuperAdmin") == null) {
             // Set a password if the standard authentication type is used
             string EmptyPassword = "";
-            _ = userManager.CreateUser<ApplicationUser>(ObjectSpace, "Admin", EmptyPassword, (user) => {
+            _ = userManager.CreateUser<GlobalUser>(ObjectSpace, "SuperAdmin", EmptyPassword, (user) => {
                 // Add the Administrators role to the user
                 user.Roles.Add(adminRole);
             });
         }
-
+        createRoles();
         ObjectSpace.CommitChanges(); //This line persists created object(s).
 #endif
     }
@@ -71,24 +72,24 @@ public class Updater : ModuleUpdater {
         base.UpdateDatabaseBeforeUpdateSchema();
     }
     private PermissionPolicyRole CreateAdminRole() {
-        PermissionPolicyRole adminRole = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(r => r.Name == "Administrators");
+        PermissionPolicyRole adminRole = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(r => r.Name == "GlobalAdministrators");
         if(adminRole == null) {
             adminRole = ObjectSpace.CreateObject<PermissionPolicyRole>();
-            adminRole.Name = "Administrators";
+            adminRole.Name = "GlobalAdministrators";
             adminRole.IsAdministrative = true;
         }
         return adminRole;
     }
     private PermissionPolicyRole CreateDefaultRole() {
-        PermissionPolicyRole defaultRole = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(role => role.Name == "Default");
+        PermissionPolicyRole defaultRole = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(role => role.Name == "DefaultGlobalRole");
         if(defaultRole == null) {
             defaultRole = ObjectSpace.CreateObject<PermissionPolicyRole>();
-            defaultRole.Name = "Default";
+            defaultRole.Name = "DefaultGlobalRole";
 
-            defaultRole.AddObjectPermissionFromLambda<ApplicationUser>(SecurityOperations.Read, cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
+            defaultRole.AddObjectPermissionFromLambda<GlobalUser>(SecurityOperations.Read, cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
             defaultRole.AddNavigationPermission(@"Application/NavigationItems/Items/Default/Items/MyDetails", SecurityPermissionState.Allow);
-            defaultRole.AddMemberPermissionFromLambda<ApplicationUser>(SecurityOperations.Write, "ChangePasswordOnFirstLogon", cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
-            defaultRole.AddMemberPermissionFromLambda<ApplicationUser>(SecurityOperations.Write, "StoredPassword", cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
+            defaultRole.AddMemberPermissionFromLambda<GlobalUser>(SecurityOperations.Write, "ChangePasswordOnFirstLogon", cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
+            defaultRole.AddMemberPermissionFromLambda<GlobalUser>(SecurityOperations.Write, "StoredPassword", cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
             defaultRole.AddTypePermissionsRecursively<PermissionPolicyRole>(SecurityOperations.Read, SecurityPermissionState.Deny);
             defaultRole.AddObjectPermission<ModelDifference>(SecurityOperations.ReadWriteAccess, "UserId = ToStr(CurrentUserId())", SecurityPermissionState.Allow);
             defaultRole.AddObjectPermission<ModelDifferenceAspect>(SecurityOperations.ReadWriteAccess, "Owner.UserId = ToStr(CurrentUserId())", SecurityPermissionState.Allow);
@@ -102,48 +103,49 @@ public class Updater : ModuleUpdater {
     }
 
   
-    private PermissionPolicyRole CreateVesselUserRole()
+    private PermissionPolicyRole CreateDefaultCrewRole(Vessel vessel)
     {
-        var roleexists = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(r => r.Name == "VesselUserRole");
+        var roleexists = vessel.CrewRoles.FirstOrDefault(r => r.Name == vessel.Name + "DefaultVesselRole");
         if (roleexists==null)
         {
-            var role = ObjectSpace.CreateObject<PermissionPolicyRole>();
-            role.Name = "VesselUserRole";
+            var role = ObjectSpace.CreateObject<ExtendedRole>();
+            role.Name = vessel.Name+ "DefaultVesselRole";
+            role.Vessel = vessel;
 
             //ApplicationUser
-            role.AddObjectPermissionFromLambda<ApplicationUser>(SecurityOperations.Read, au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<ApplicationUser>(SecurityOperations.Read, au => au.AssignedVessels.Any(au2 => au2.AssignedUsers.Any(au3 => au3.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
-
+            role.AddObjectPermissionFromLambda<Crew>(SecurityOperations.Read, au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
+            //role.AddObjectPermissionFromLambda<Crew>(SecurityOperations.Read, au => au.VesselID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
+          
             //VesselObjects
-            role.AddObjectPermissionFromLambda<Vessel>(SecurityOperations.Read, d => d.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<VesselSide>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<VesselLocation>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<Deck>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Vessel>(SecurityOperations.Read, d => d.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<VesselSide>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<VesselLocation>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Deck>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             //VesselSafetyObjects
-            role.AddObjectPermissionFromLambda<MusterStation>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<SurvivalCraft>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<SurvivalCraftType>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<MusterStation>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<SurvivalCraft>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<SurvivalCraftType>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             ////CabinObjects
-            role.AddObjectPermissionFromLambda<Cabin>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<CabinCategory>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<CabinBedType>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<CabinType>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Cabin>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CabinCategory>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CabinBedType>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CabinType>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             //SeasonObjects
-            role.AddObjectPermissionFromLambda<Season>(SecurityOperations.Read, d => d.SeasonVessels.Any(sv => sv.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<SeasonVessel>(SecurityOperations.Read, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Season>(SecurityOperations.Read, d => d.SeasonVessels.Any(sv => sv.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<SeasonVessel>(SecurityOperations.Read, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
             //CruiseObjects
-            role.AddObjectPermissionFromLambda<Cruise>(SecurityOperations.Read, d => d.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<ItineraryDay>(SecurityOperations.Read, d => d.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Cruise>(SecurityOperations.Read, d => d.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<ItineraryDay>(SecurityOperations.Read, d => d.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
             //PassengerObjects
-            role.AddObjectPermissionFromLambda<CruisePassenger>(SecurityOperations.Read, d => d.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<Passenger>(SecurityOperations.Read, d => d.PastCruises.Any(cp => cp.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<PassengerFolio>(SecurityOperations.Read, d => d.CruisePassenger.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CruisePassenger>(SecurityOperations.Read, d => d.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Passenger>(SecurityOperations.Read, d => d.PastCruises.Any(cp => cp.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<PassengerFolio>(SecurityOperations.Read, d => d.CruisePassenger.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
 
             //SalesObjects
-            role.AddObjectPermissionFromLambda<Transaction>(SecurityOperations.Read, d => d.PassengerFolio.CruisePassenger.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Transaction>(SecurityOperations.Read, d => d.PassengerFolio.CruisePassenger.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             
             
             
@@ -155,48 +157,50 @@ public class Updater : ModuleUpdater {
         
     }
 
-    private PermissionPolicyRole CreateVesselAdminRole()
+    private PermissionPolicyRole CreateSYSADMINRole(Vessel vessel)
     {
-        var roleexists = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(r => r.Name == "VesselAdminRole");
+        
+        var roleexists = vessel.CrewRoles.FirstOrDefault(r => r.Name ==vessel.Name+ "SysAdminRole");
         if (roleexists == null)
         {
-            var role = ObjectSpace.CreateObject<PermissionPolicyRole>();
-            role.Name = "VesselAdminRole";
+            var role = ObjectSpace.CreateObject<ExtendedRole>();
+            role.Name = vessel.Name +"SysAdminRole";
+            role.Vessel = vessel;
 
             //ApplicationUser
-            role.AddObjectPermissionFromLambda<ApplicationUser>(SecurityOperations.ReadWriteAccess, au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<ApplicationUser>(SecurityOperations.ReadWriteAccess, au => au.AssignedVessels.Any(au2 => au2.AssignedUsers.Any(au3 => au3.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Crew>(SecurityOperations.FullObjectAccess, au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Crew>(SecurityOperations.ReadWriteAccess, au => au.Vessel.Crews.Any(c=> c.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
             //VesselObjects
-            role.AddObjectPermissionFromLambda<Vessel>(SecurityOperations.ReadWriteAccess, d => d.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<VesselSide>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<VesselLocation>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<Deck>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Vessel>(SecurityOperations.ReadWriteAccess, d => d.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<VesselSide>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<VesselLocation>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Deck>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             //VesselSafetyObjects
-            role.AddObjectPermissionFromLambda<MusterStation>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<SurvivalCraft>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<SurvivalCraftType>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<MusterStation>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<SurvivalCraft>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<SurvivalCraftType>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             ////CabinObjects
-            role.AddObjectPermissionFromLambda<Cabin>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<CabinCategory>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<CabinBedType>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<CabinType>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Cabin>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CabinCategory>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CabinBedType>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CabinType>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
             //SeasonObjects
-            role.AddObjectPermissionFromLambda<Season>(SecurityOperations.ReadWriteAccess, d => d.SeasonVessels.Any(sv => sv.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<SeasonVessel>(SecurityOperations.ReadWriteAccess, d => d.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Season>(SecurityOperations.ReadWriteAccess, d => d.SeasonVessels.Any(sv => sv.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<SeasonVessel>(SecurityOperations.ReadWriteAccess, d => d.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
             //CruiseObjects
-            role.AddObjectPermissionFromLambda<Cruise>(SecurityOperations.ReadWriteAccess, d => d.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<ItineraryDay>(SecurityOperations.ReadWriteAccess, d => d.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Cruise>(SecurityOperations.ReadWriteAccess, d => d.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<ItineraryDay>(SecurityOperations.ReadWriteAccess, d => d.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
             //PassengerObjects
-            role.AddObjectPermissionFromLambda<CruisePassenger>(SecurityOperations.ReadWriteAccess, d => d.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<Passenger>(SecurityOperations.ReadWriteAccess, d => d.PastCruises.Any(cp => cp.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
-            role.AddObjectPermissionFromLambda<PassengerFolio>(SecurityOperations.ReadWriteAccess, d => d.CruisePassenger.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<CruisePassenger>(SecurityOperations.ReadWriteAccess, d => d.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Passenger>(SecurityOperations.ReadWriteAccess, d => d.PastCruises.Any(cp => cp.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId())), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<PassengerFolio>(SecurityOperations.ReadWriteAccess, d => d.CruisePassenger.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
 
             //SalesObjects
-            role.AddObjectPermissionFromLambda<Transaction>(SecurityOperations.ReadWriteAccess, d => d.PassengerFolio.CruisePassenger.Cruise.SeasonVessel.Vessel.AssignedUsers.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
+            role.AddObjectPermissionFromLambda<Transaction>(SecurityOperations.ReadWriteAccess, d => d.PassengerFolio.CruisePassenger.Cruise.SeasonVessel.Vessel.Crews.Any(au => au.ID == (Guid)CurrentUserIdOperator.CurrentUserId()), SecurityPermissionState.Allow);
 
 
 
@@ -208,4 +212,14 @@ public class Updater : ModuleUpdater {
 
     }
 
-}
+    private void createRoles()
+    {
+        var vessels = ObjectSpace.GetObjects<Vessel>();
+        foreach (var vessel in vessels)
+        {
+            CreateDefaultCrewRole(vessel);
+            CreateSYSADMINRole(vessel);
+            ObjectSpace.CommitChanges();
+        }
+    }
+ }

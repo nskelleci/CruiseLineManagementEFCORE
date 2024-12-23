@@ -4,6 +4,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CruiseLineManagementEFCORE.Module.Migrations
 {
     [DbContext(typeof(CruiseLineManagementEFCOREEFCoreDbContext))]
-    partial class CruiseLineManagementEFCOREEFCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241221143918_rolesaupdated1")]
+    partial class rolesaupdated1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +28,7 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CrewExtendedRole", b =>
+            modelBuilder.Entity("CrewCrewRole", b =>
                 {
                     b.Property<Guid>("CrewRolesID")
                         .HasColumnType("uniqueidentifier");
@@ -37,7 +40,7 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
 
                     b.HasIndex("CrewsID");
 
-                    b.ToTable("CrewExtendedRole");
+                    b.ToTable("CrewCrewRole");
                 });
 
             modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUserLoginInfo", b =>
@@ -1265,7 +1268,7 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                     b.ToTable("EventResource");
                 });
 
-            modelBuilder.Entity("ExtendedRoleGlobalUser", b =>
+            modelBuilder.Entity("GlobalRoleGlobalUser", b =>
                 {
                     b.Property<Guid>("GlobalRolesID")
                         .HasColumnType("uniqueidentifier");
@@ -1277,20 +1280,20 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
 
                     b.HasIndex("GlobalUsersID");
 
-                    b.ToTable("ExtendedRoleGlobalUser");
+                    b.ToTable("GlobalRoleGlobalUser");
                 });
 
             modelBuilder.Entity("GlobalUserVessel", b =>
                 {
+                    b.Property<Guid>("AssignedUsersID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("AssignedVesselsID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GlobalUsersID")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("AssignedUsersID", "AssignedVesselsID");
 
-                    b.HasKey("AssignedVesselsID", "GlobalUsersID");
-
-                    b.HasIndex("GlobalUsersID");
+                    b.HasIndex("AssignedVesselsID");
 
                     b.ToTable("GlobalUserVessel");
                 });
@@ -1345,19 +1348,23 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.ExtendedRole", b =>
+            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CrewRole", b =>
                 {
                     b.HasBaseType("DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyRole");
-
-                    b.Property<bool>("IsGlobalRole")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("VesselID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("VesselID");
 
-                    b.HasDiscriminator().HasValue("ExtendedRole");
+                    b.HasDiscriminator().HasValue("CrewRole");
+                });
+
+            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.GlobalRole", b =>
+                {
+                    b.HasBaseType("DevExpress.Persistent.BaseImpl.EF.PermissionPolicy.PermissionPolicyRole");
+
+                    b.HasDiscriminator().HasValue("GlobalRole");
                 });
 
             modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects.Crew", b =>
@@ -1388,9 +1395,9 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                     b.HasDiscriminator().HasValue("GlobalUser");
                 });
 
-            modelBuilder.Entity("CrewExtendedRole", b =>
+            modelBuilder.Entity("CrewCrewRole", b =>
                 {
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.ExtendedRole", null)
+                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.CrewRole", null)
                         .WithMany()
                         .HasForeignKey("CrewRolesID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1877,9 +1884,9 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ExtendedRoleGlobalUser", b =>
+            modelBuilder.Entity("GlobalRoleGlobalUser", b =>
                 {
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.ExtendedRole", null)
+                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.GlobalRole", null)
                         .WithMany()
                         .HasForeignKey("GlobalRolesID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1894,15 +1901,15 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
 
             modelBuilder.Entity("GlobalUserVessel", b =>
                 {
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.Vessel", null)
+                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.GlobalUser", null)
                         .WithMany()
-                        .HasForeignKey("AssignedVesselsID")
+                        .HasForeignKey("AssignedUsersID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.GlobalUser", null)
+                    b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.Vessel", null)
                         .WithMany()
-                        .HasForeignKey("GlobalUsersID")
+                        .HasForeignKey("AssignedVesselsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1937,7 +1944,7 @@ namespace CruiseLineManagementEFCORE.Module.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.ExtendedRole", b =>
+            modelBuilder.Entity("CruiseLineManagementEFCORE.Module.BusinessObjects.CrewRole", b =>
                 {
                     b.HasOne("CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.Vessel", "Vessel")
                         .WithMany("CrewRoles")

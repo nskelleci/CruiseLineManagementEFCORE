@@ -15,6 +15,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SalesObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects;
+using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
 
 namespace CruiseLineManagementEFCORE.Module.BusinessObjects;
 
@@ -48,7 +49,9 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
 	public DbSet<ModelDifference> ModelDifferences { get; set; }
 	public DbSet<ModelDifferenceAspect> ModelDifferenceAspects { get; set; }
 	public DbSet<PermissionPolicyRole> Roles { get; set; }
-	public DbSet<CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUser> Users { get; set; }
+    //public DbSet<VesselRole> VesselSpecificRoles { get; set; }
+    //public DbSet<VesselUser> OnBoardUsers { get; set; }
+    public DbSet<CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUser> Users { get; set; }
     public DbSet<CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUserLoginInfo> UserLoginInfos { get; set; }
 	public DbSet<FileData> FileData { get; set; }
 	public DbSet<ReportDataV2> ReportDataV2 { get; set; }
@@ -65,6 +68,10 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
 
     #region BusinessObjects
 
+    public DbSet<Crew> Crews { get; set; }
+
+    public DbSet<GlobalUser> GlobalUsers { get; set; }
+    public DbSet<ExtendedRole> ExtendedRoles { get; set; }
     public DbSet<Vessel> Vessels { get; set; }
     public DbSet<Deck> Decks { get; set; }
     public DbSet<VesselLocation> VesselLocations { get; set; }
@@ -79,6 +86,9 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
 
     public DbSet<SeasonVessel> SeasonVessels { get; set; }
     public DbSet<Cruise> Cruises { get; set; }
+    public DbSet<CruisePort> CruisePorts { get; set; }
+    public DbSet<CruisePortCity> CruisePortCities { get; set; }
+    public DbSet<CruisePortCountry> CruisePortCountries { get; set; }
     public DbSet<CruisePassenger> CruisePassengers { get; set; }
     public DbSet<Passenger> Passengers { get; set; }
     public DbSet<PassengerFolio> PassengerFolios { get; set; }
@@ -115,9 +125,7 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
 
 
         #region BusinessObjects
-        // SeasonShip primary key
-        //modelBuilder.Entity<SeasonVessel>()
-        //    .HasFore(ss => new { ss.SeasonID, ss.VesselID });
+
         modelBuilder.Entity<SeasonVessel>()
             .HasKey(ss => ss.ID);
         modelBuilder.Entity<SeasonVessel>()
@@ -209,6 +217,64 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
         modelBuilder.Entity<Vessel>()
             .HasMany(v => v.CabinBedTypes)
             .WithOne(u => u.Vessel);
+
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v => v.SurvivalCrafts)
+            .WithOne(sc => sc.Vessel);
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v => v.SurvivalCraftTypes)
+            .WithOne(sct => sct.Vessel);
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v => v.MusterStations)
+            .WithOne(ms => ms.Vessel);
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v => v.Crews)
+            .WithOne(c => c.Vessel);
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v=> v.CrewRoles)
+            .WithOne(cr => cr.Vessel)
+            .HasForeignKey(cr => cr.VesselID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v => v.GlobalUsers)
+            .WithMany(u => u.AssignedVessels);
+
+
+
+
+        modelBuilder.Entity<Crew>()
+            .HasOne(c => c.Vessel)
+            .WithMany(v => v.Crews)
+            .HasForeignKey(c => c.VesselID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Crew>()
+            .HasMany(c => c.CrewRoles)
+            .WithMany(r => r.Crews);
+        modelBuilder.Entity<ExtendedRole>()
+            .HasMany(er => er.Crews)
+            .WithMany(c => c.CrewRoles);
+
+        modelBuilder.Entity<ExtendedRole>()
+            .HasOne(er => er.Vessel)
+            .WithMany(v => v.CrewRoles);
+
+        modelBuilder.Entity<ExtendedRole>()
+            .HasMany(er=> er.GlobalUsers)
+            .WithMany(gu=> gu.GlobalRoles);
+
+
+
+
+
+
+
+
+
+
+
+
 
         modelBuilder.Entity<Deck>()
             .HasMany(d => d.VesselLocations)
