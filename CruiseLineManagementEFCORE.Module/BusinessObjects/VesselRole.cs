@@ -1,3 +1,4 @@
+using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
@@ -35,5 +36,7 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects
 
         public virtual Guid VesselID { get; set; }
         public virtual Vessel Vessel { get; set; }
+
+        public virtual ICollection<Crew> CrewMembers { get; set; } = new ObservableCollection<Crew>();
     }
 }

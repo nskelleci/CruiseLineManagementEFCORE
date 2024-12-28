@@ -106,7 +106,7 @@ public class Updater : ModuleUpdater {
     }
 
   
-    private VesselRole CreateDefaultCrewRole(Vessel vessel)
+    private VesselRole CreateDefaultVesselRole(Vessel vessel)
     {
         var roleexists = vessel.Roles.FirstOrDefault(r => r.Name == vessel.Name + "DefaultVesselRole");
         if (roleexists==null)
@@ -220,7 +220,7 @@ public class Updater : ModuleUpdater {
         var vessels = ObjectSpace.GetObjects<Vessel>();
         foreach (var vessel in vessels)
         {
-            CreateDefaultCrewRole(vessel);
+            CreateDefaultVesselRole(vessel);
             CreateSYSADMINRole(vessel);
             ObjectSpace.CommitChanges();
         }

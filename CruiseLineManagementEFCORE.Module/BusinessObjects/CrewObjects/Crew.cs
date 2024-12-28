@@ -44,6 +44,8 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects
         public virtual Guid VesselID { get; set; }
         public virtual Vessel Vessel { get; set; }
 
+        public virtual ICollection<VesselRole> VesselRoles { get; set; } = new ObservableCollection<VesselRole>();
+
 
     }
 }

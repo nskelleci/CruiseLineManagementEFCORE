@@ -250,8 +250,11 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .WithMany(v => v.Crews)
             .HasForeignKey(c => c.VesselID)
             .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Crew>()
+            .HasMany(c => c.VesselRoles)
+            .WithMany(vr => vr.CrewMembers);
 
-       
+
 
 
 
