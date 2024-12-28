@@ -52,16 +52,18 @@ public class Updater : ModuleUpdater {
             _ = userManager.CreateUser<GlobalUser>(ObjectSpace, "GlobalUser", EmptyPassword, (user) => {
                 // Add the Users role to the user
                 user.Roles.Add(defaultRole);
+                user.UserType = UserType.GlobalUser;
             });
         }
 
         // If a user named 'Admin' doesn't exist in the database, create this user
-        if(userManager.FindUserByName<GlobalUser>(ObjectSpace, "SuperAdmin") == null) {
+        if(userManager.FindUserByName<ApplicationUser>(ObjectSpace, "SuperAdmin") == null) {
             // Set a password if the standard authentication type is used
             string EmptyPassword = "";
-            _ = userManager.CreateUser<GlobalUser>(ObjectSpace, "SuperAdmin", EmptyPassword, (user) => {
+            _ = userManager.CreateUser<ApplicationUser>(ObjectSpace, "SuperAdmin", EmptyPassword, (user) => {
                 // Add the Administrators role to the user
                 user.Roles.Add(adminRole);
+                user.UserType = UserType.SuperAdmin;
             });
         }
         createRoles();
@@ -77,6 +79,7 @@ public class Updater : ModuleUpdater {
             adminRole = ObjectSpace.CreateObject<PermissionPolicyRole>();
             adminRole.Name = "GlobalAdministrators";
             adminRole.IsAdministrative = true;
+
         }
         return adminRole;
     }
@@ -103,12 +106,12 @@ public class Updater : ModuleUpdater {
     }
 
   
-    private PermissionPolicyRole CreateDefaultCrewRole(Vessel vessel)
+    private VesselRole CreateDefaultCrewRole(Vessel vessel)
     {
-        var roleexists = vessel.CrewRoles.FirstOrDefault(r => r.Name == vessel.Name + "DefaultVesselRole");
+        var roleexists = vessel.Roles.FirstOrDefault(r => r.Name == vessel.Name + "DefaultVesselRole");
         if (roleexists==null)
         {
-            var role = ObjectSpace.CreateObject<ExtendedRole>();
+            var role = ObjectSpace.CreateObject<VesselRole>();
             role.Name = vessel.Name+ "DefaultVesselRole";
             role.Vessel = vessel;
 
@@ -157,13 +160,13 @@ public class Updater : ModuleUpdater {
         
     }
 
-    private PermissionPolicyRole CreateSYSADMINRole(Vessel vessel)
+    private VesselRole CreateSYSADMINRole(Vessel vessel)
     {
         
-        var roleexists = vessel.CrewRoles.FirstOrDefault(r => r.Name ==vessel.Name+ "SysAdminRole");
+        var roleexists = vessel.Roles.FirstOrDefault(r => r.Name ==vessel.Name+ "SysAdminRole");
         if (roleexists == null)
         {
-            var role = ObjectSpace.CreateObject<ExtendedRole>();
+            var role = ObjectSpace.CreateObject<VesselRole>();
             role.Name = vessel.Name +"SysAdminRole";
             role.Vessel = vessel;
 

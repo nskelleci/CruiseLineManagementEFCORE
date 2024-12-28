@@ -71,8 +71,9 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects
             }
         }
 
-        public virtual ICollection<GlobalUser> GlobalUsers { get; set; } = new ObservableCollection<GlobalUser>();
+        public virtual ICollection<VesselRole> Roles { get; set; } = new ObservableCollection<VesselRole>();
         public virtual ICollection<Crew> Crews { get; set; } = new ObservableCollection<Crew>();
-        public virtual ICollection<ExtendedRole> CrewRoles { get; set; } = new ObservableCollection<ExtendedRole>();
+        public virtual ICollection<GlobalUser> GlobalUsers { get; set; } = new ObservableCollection<GlobalUser>();
+
     }
 }

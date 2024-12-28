@@ -96,7 +96,7 @@ public class Startup {
             builder.Security
                 .UseIntegratedMode(options => {
                     options.Lockout.Enabled = true;
-                    options.RoleType = typeof(PermissionPolicyRole);
+                    options.RoleType = typeof(VesselRole);
                     
                     // ApplicationUser descends from PermissionPolicyUser and supports the OAuth authentication. For more information, refer to the following topic: https://docs.devexpress.com/eXpressAppFramework/402197
                     // If your application uses PermissionPolicyUser or a custom user type, set the UserType property as follows:

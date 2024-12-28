@@ -6,7 +6,6 @@
     </Actions>
   </ActionDesign>
   <BOModel>
-    <Class Name="CruiseLineManagementEFCORE.Module.BusinessObjects.CrewRole" DefaultListViewAllowEdit="False" />
     <Class Name="CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects.Cruise">
       <OwnMembers>
         <Member Name="SeasonVessel" DataSourceProperty="" DisplayFormat="" LookupProperty="" />
@@ -23,6 +22,11 @@
   <NavigationItems>
     <Items>
       <Item Id="_shipConfigurations" Caption="Ship Configurations" IsNewNode="True" />
+      <Item Id="Default">
+        <Items>
+          <Item Id="GlobalRoles" ViewId="PermissionPolicyRoleBase_ListView" Caption="Global Roles" IsNewNode="True" />
+        </Items>
+      </Item>
     </Items>
   </NavigationItems>
   <Options>
@@ -34,43 +38,11 @@
   </SchemaModules>
   <Views>
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
-    <ListView Id="Crew_CrewRoles_ListView">
-      <Columns>
-        <ColumnInfo Id="CanEditModel" Removed="True" />
-        <ColumnInfo Id="IsAdministrative" Removed="True" />
-      </Columns>
-    </ListView>
     <DetailView Id="Crew_DetailView">
       <Items>
         <PropertyEditor Id="Roles" Removed="True" />
       </Items>
     </DetailView>
-    <ListView Id="CrewRole_Crews_ListView">
-      <Columns>
-        <ColumnInfo Id="FirstName" Width="197" />
-        <ColumnInfo Id="LastName" Width="186" />
-        <ColumnInfo Id="CrewMemberId" Width="269" />
-      </Columns>
-    </ListView>
-    <DetailView Id="CrewRole_DetailView">
-      <Items>
-        <PropertyEditor Id="CanEditModel" PropertyName="CanEditModel" AllowEdit="False" IsNewNode="True" Removed="True" />
-        <PropertyEditor Id="IsAdministrative" PropertyName="IsAdministrative" AllowEdit="False" IsNewNode="True" Removed="True" />
-        <PropertyEditor Id="Users" Removed="True" />
-      </Items>
-    </DetailView>
-    <ListView Id="CrewRole_ListView">
-      <Columns>
-        <ColumnInfo Id="CanEditModel" Removed="True" />
-        <ColumnInfo Id="IsAdministrative" Removed="True" />
-      </Columns>
-    </ListView>
-    <ListView Id="CrewRole_LookupListView" AllowEdit="False">
-      <Columns>
-        <ColumnInfo Id="Vessel" PropertyName="Vessel.Name" IsNewNode="True" />
-      </Columns>
-    </ListView>
-    <ListView Id="CrewUser_CrewRoles_ListView" Removed="True" />
     <DetailView Id="Cruise_DetailView">
       <Items>
         <PropertyEditor Id="SeasonVessel" PropertyName="SeasonVessel" LookupProperty="" DisplayFormat="" />
@@ -137,12 +109,6 @@
         </LayoutGroup>
       </Layout>
     </DetailView>
-    <ListView Id="Vessel_CrewRoles_ListView">
-      <Columns>
-        <ColumnInfo Id="CanEditModel" Removed="True" />
-        <ColumnInfo Id="IsAdministrative" Removed="True" />
-      </Columns>
-    </ListView>
     <ListView Id="Vessel_SeasonVessels_ListView">
       <Columns>
         <ColumnInfo Id="SeasonID" Width="166" />

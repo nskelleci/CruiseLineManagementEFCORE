@@ -23,7 +23,12 @@ public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo,
     {
       
     }
-
+    
+    private UserType userType;
+    public virtual UserType UserType
+    {
+        get; set;
+    }
     //public virtual ICollection<Vessel> AssignedVessels{get; set;} = new ObservableCollection<Vessel>();
 
     IEnumerable<ISecurityUserLoginInfo> IOAuthSecurityUser.UserLogins => UserLogins.OfType<ISecurityUserLoginInfo>();
@@ -35,4 +40,11 @@ public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo,
         result.User = this;
         return result;
     }
+}
+
+public enum UserType
+{
+    CrewMember,
+    GlobalUser,
+    SuperAdmin
 }

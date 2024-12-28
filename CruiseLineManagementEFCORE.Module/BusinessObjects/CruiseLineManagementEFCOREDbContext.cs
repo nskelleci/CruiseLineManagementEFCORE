@@ -71,7 +71,7 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
     public DbSet<Crew> Crews { get; set; }
 
     public DbSet<GlobalUser> GlobalUsers { get; set; }
-    public DbSet<ExtendedRole> ExtendedRoles { get; set; }
+    public DbSet<VesselRole> VesselRoles { get; set; }
     public DbSet<Vessel> Vessels { get; set; }
     public DbSet<Deck> Decks { get; set; }
     public DbSet<VesselLocation> VesselLocations { get; set; }
@@ -231,14 +231,16 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .HasMany(v => v.Crews)
             .WithOne(c => c.Vessel);
         modelBuilder.Entity<Vessel>()
-            .HasMany(v=> v.CrewRoles)
-            .WithOne(cr => cr.Vessel)
-            .HasForeignKey(cr => cr.VesselID)
-            .OnDelete(DeleteBehavior.NoAction);
-
-        modelBuilder.Entity<Vessel>()
             .HasMany(v => v.GlobalUsers)
-            .WithMany(u => u.AssignedVessels);
+            .WithMany(gu => gu.AssignedVessels);
+        modelBuilder.Entity<Vessel>()
+            .HasMany(v => v.Roles)
+            .WithOne(r => r.Vessel);
+
+
+
+
+
 
 
 
@@ -249,20 +251,7 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .HasForeignKey(c => c.VesselID)
             .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity<Crew>()
-            .HasMany(c => c.CrewRoles)
-            .WithMany(r => r.Crews);
-        modelBuilder.Entity<ExtendedRole>()
-            .HasMany(er => er.Crews)
-            .WithMany(c => c.CrewRoles);
-
-        modelBuilder.Entity<ExtendedRole>()
-            .HasOne(er => er.Vessel)
-            .WithMany(v => v.CrewRoles);
-
-        modelBuilder.Entity<ExtendedRole>()
-            .HasMany(er=> er.GlobalUsers)
-            .WithMany(gu=> gu.GlobalRoles);
+       
 
 
 

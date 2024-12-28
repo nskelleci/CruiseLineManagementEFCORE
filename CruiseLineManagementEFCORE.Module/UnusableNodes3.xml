@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <BOModel Id="BOModel">
+    <Class Name="CruiseLineManagementEFCORE.Module.BusinessObjects.CrewRole" DefaultListViewAllowEdit="False" />
+  </BOModel>
+  <Views Id="Views">
+    <ListView Id="Crew_CrewRoles_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="CanEditModel" Removed="True" />
+        <ColumnInfo Id="IsAdministrative" Removed="True" />
+      </Columns>
+    </ListView>
+    <ListView Id="CrewRole_Crews_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="FirstName" Width="197" />
+        <ColumnInfo Id="LastName" Width="186" />
+        <ColumnInfo Id="CrewMemberId" Width="269" />
+      </Columns>
+    </ListView>
+    <DetailView Id="CrewRole_DetailView">
+      <Items Id="Items">
+        <PropertyEditor Id="CanEditModel" PropertyName="CanEditModel" AllowEdit="False" Removed="True" />
+        <PropertyEditor Id="IsAdministrative" PropertyName="IsAdministrative" AllowEdit="False" Removed="True" />
+        <PropertyEditor Id="Users" Removed="True" />
+      </Items>
+    </DetailView>
+    <ListView Id="CrewRole_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="CanEditModel" Removed="True" />
+        <ColumnInfo Id="IsAdministrative" Removed="True" />
+      </Columns>
+    </ListView>
+    <ListView Id="CrewRole_LookupListView" AllowEdit="False">
+      <Columns Id="Columns">
+        <ColumnInfo Id="Vessel" PropertyName="Vessel.Name" />
+      </Columns>
+    </ListView>
+    <ListView Id="CrewUser_CrewRoles_ListView" Removed="True" />
+    <ListView Id="Vessel_CrewRoles_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="CanEditModel" Removed="True" />
+        <ColumnInfo Id="IsAdministrative" Removed="True" />
+      </Columns>
+    </ListView>
+  </Views>
+</Application>

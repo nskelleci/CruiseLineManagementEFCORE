@@ -35,6 +35,8 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects
             // this.AssociatedEntities = new ObservableCollection<AssociatedEntityObject>();
         }
 
+        public override UserType UserType => UserType.CrewMember;
+
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
         public  virtual string CrewMemberId { get; set; }
@@ -42,7 +44,6 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects
         public virtual Guid VesselID { get; set; }
         public virtual Vessel Vessel { get; set; }
 
-        public virtual ICollection<ExtendedRole> CrewRoles { get; set; } = new ObservableCollection<ExtendedRole>();
 
     }
 }
