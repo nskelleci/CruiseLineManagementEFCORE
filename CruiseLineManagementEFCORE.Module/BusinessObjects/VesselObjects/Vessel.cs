@@ -1,3 +1,4 @@
+using CruiseLineManagementEFCORE.Module.AppSecurity;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CruiseObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SeasonObjects;
@@ -71,7 +72,7 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects
             }
         }
 
-        public virtual ICollection<VesselRole> Roles { get; set; } = new ObservableCollection<VesselRole>();
+        public virtual ICollection<CrewRole> CrewRoles { get; set; } = new ObservableCollection<CrewRole>();
         public virtual ICollection<Crew> Crews { get; set; } = new ObservableCollection<Crew>();
         public virtual ICollection<GlobalUser> GlobalUsers { get; set; } = new ObservableCollection<GlobalUser>();
 

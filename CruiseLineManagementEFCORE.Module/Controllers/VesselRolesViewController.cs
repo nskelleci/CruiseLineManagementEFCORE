@@ -1,4 +1,5 @@
-﻿using CruiseLineManagementEFCORE.Module.BusinessObjects;
+﻿using CruiseLineManagementEFCORE.Module.AppSecurity;
+using CruiseLineManagementEFCORE.Module.BusinessObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
@@ -35,21 +36,21 @@ namespace CruiseLineManagementEFCORE.Module.Controllers
             base.OnActivated();
             // Perform various tasks depending on the target View.
 
-            var user = SecuritySystem.CurrentUser as ApplicationUser;
-            if (user.UserType == UserType.GlobalUser)
-            {
-                var globalUser = user as GlobalUser;
-                //var vessel = globalUser.AssignedVessels.FirstOrDefault();               
-                var criteria = CriteriaOperator.Parse("VesselID = ?", globalUser.AssignedVessels.FirstOrDefault().ID);
-                View.CollectionSource.Criteria ["VesselRoles"] = criteria;
-            }
+            //var user = SecuritySystem.CurrentUser as ApplicationUser;
+            //if (user.UserType == UserType.GlobalUser)
+            //{
+            //    var globalUser = user as GlobalUser;
+            //    //var vessel = globalUser.AssignedVessels.FirstOrDefault();               
+            //    var criteria = CriteriaOperator.Parse("VesselID = ?", globalUser.AssignedVessels.FirstOrDefault().ID);
+            //    View.CollectionSource.Criteria ["VesselRoles"] = criteria;
+            //}
 
-            if (user.UserType == UserType.CrewMember)
-            {
-                var crew = user as Crew;
-                var criteria = CriteriaOperator.Parse("VesselID = ?", crew.VesselID);
-                View.CollectionSource.Criteria["VesselRoles"] = criteria;
-            }
+            //if (user.UserType == UserType.CrewMember)
+            //{
+            //    var crew = user as Crew;
+            //    var criteria = CriteriaOperator.Parse("VesselID = ?", crew.VesselID);
+            //    View.CollectionSource.Criteria["VesselRoles"] = criteria;
+            //}
         }
         protected override void OnViewControlsCreated()
         {

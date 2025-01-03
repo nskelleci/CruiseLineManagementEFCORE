@@ -21,10 +21,110 @@
   </BOModel>
   <NavigationItems>
     <Items>
-      <Item Id="_shipConfigurations" Caption="Ship Configurations" IsNewNode="True" />
-      <Item Id="Default">
+      <Item Id="GlobalSettings" Caption="Global Settings" Index="0" IsNewNode="True">
+        <Items IsNewNode="True">
+          <Item Id="Passenger_ListView" ViewId="Passenger_ListView" ObjectKey="" IsNewNode="True" />
+          <Item Id="UsersAndRolesManagement" Caption="Users And Roles Management" IsNewNode="True">
+            <Items IsNewNode="True">
+              <Item Id="BaseRole_ListView" ViewId="BaseRole_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="BaseUser_ListView" ViewId="BaseUser_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="GlobalRoles" ViewId="PermissionPolicyRoleBase_ListView" Caption="Global Roles" IsNewNode="True" />
+              <Item Id="GlobalUser_ListView" ViewId="GlobalUser_ListView" ObjectKey="" IsNewNode="True" />
+            </Items>
+          </Item>
+          <Item Id="Vessel_ListView" ViewId="Vessel_ListView" ObjectKey="" IsNewNode="True" />
+        </Items>
+      </Item>
+      <Item Id="SeasonSettings" Caption="Season Settings" Index="1" IsNewNode="True">
+        <Items IsNewNode="True">
+          <Item Id="CruiseConfigurations" Caption="Cruise Configurations" IsNewNode="True">
+            <Items IsNewNode="True">
+              <Item Id="Cruise_ListView" ViewId="Cruise_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CruisePort_ListView" ViewId="CruisePort_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CruisePortCity_ListView" ViewId="CruisePortCity_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CruisePortCountry_ListView" ViewId="CruisePortCountry_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="ItineraryDay_ListView" ViewId="ItineraryDay_ListView" ObjectKey="" IsNewNode="True" />
+            </Items>
+          </Item>
+          <Item Id="Season_ListView" ViewId="Season_ListView" ObjectKey="" IsNewNode="True" />
+          <Item Id="SeasonVessel_ListView" ViewId="SeasonVessel_ListView" ObjectKey="" IsNewNode="True" />
+        </Items>
+      </Item>
+      <Item Id="VesselSettings" Caption="Vessel Settings" Index="2" IsNewNode="True">
+        <Items IsNewNode="True">
+          <Item Id="OnboardUsersandRoles " Caption="Onboard Users and Roles " Index="3" IsNewNode="True">
+            <Items IsNewNode="True">
+              <Item Id="Crew_ListView" ViewId="Crew_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CrewRole_ListView" ViewId="CrewRole_ListView" ObjectKey="" IsNewNode="True" />
+            </Items>
+          </Item>
+          <Item Id="CabinConfigurations" Caption="Cabin Configurations" IsNewNode="True">
+            <Items IsNewNode="True">
+              <Item Id="Cabin_ListView" ViewId="Cabin_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CabinBedType_ListView" ViewId="CabinBedType_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CabinCategory_ListView" ViewId="CabinCategory_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="CabinType_ListView" ViewId="CabinType_ListView" ObjectKey="" IsNewNode="True" />
+            </Items>
+          </Item>
+          <Item Id="Deck_ListView" ViewId="Deck_ListView" ObjectKey="" IsNewNode="True" />
+          <Item Id="SafetyConfigurations" Caption="Safety Configurations" IsNewNode="True">
+            <Items IsNewNode="True">
+              <Item Id="MusterStation_ListView" ViewId="MusterStation_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="SurvivalCraft_ListView" ViewId="SurvivalCraft_ListView" ObjectKey="" IsNewNode="True" />
+              <Item Id="SurvivalCraftType_ListView" ViewId="SurvivalCraftType_ListView" ObjectKey="" IsNewNode="True" />
+            </Items>
+          </Item>
+          <Item Id="VesselLocation_ListView" ViewId="VesselLocation_ListView" ObjectKey="" IsNewNode="True" />
+          <Item Id="VesselSide_ListView" ViewId="VesselSide_ListView" ObjectKey="" IsNewNode="True" />
+        </Items>
+      </Item>
+      <Item Id="CrewManagement" Caption="Crew Management" Index="3" IsNewNode="True">
+        <Items IsNewNode="True">
+          <Item Id="Crew_ListView" ViewId="Crew_ListView" ObjectKey="" IsNewNode="True" />
+        </Items>
+      </Item>
+      <Item Id="PassengerManagement" Caption="Passenger Management" Index="4" IsNewNode="True">
+        <Items IsNewNode="True">
+          <Item Id="CruisePassenger_ListView" ViewId="CruisePassenger_ListView" ObjectKey="" IsNewNode="True" />
+        </Items>
+      </Item>
+      <Item Id="Reports" Index="5" />
+      <Item Id="KPI" Index="6" />
+      <Item Id="Default" Index="7">
         <Items>
-          <Item Id="GlobalRoles" ViewId="PermissionPolicyRoleBase_ListView" Caption="Global Roles" IsNewNode="True" />
+          <Item Id="BaseRole_ListView" Removed="True" />
+          <Item Id="BaseUser_ListView" Removed="True" />
+          <Item Id="Cabin_ListView" Removed="True" />
+          <Item Id="CabinBedType_ListView" Removed="True" />
+          <Item Id="CabinCategory_ListView" Removed="True" />
+          <Item Id="CabinType_ListView" Removed="True" />
+          <Item Id="Crew_ListView" Removed="True" />
+          <Item Id="CrewRole_ListView" Removed="True" />
+          <Item Id="Cruise_ListView" Removed="True" />
+          <Item Id="CruisePassenger_ListView" Removed="True" />
+          <Item Id="CruisePort_ListView" Removed="True" />
+          <Item Id="CruisePortCity_ListView" Removed="True" />
+          <Item Id="CruisePortCountry_ListView" Removed="True" />
+          <Item Id="GlobalUser_ListView" Removed="True" />
+          <Item Id="ItineraryDay_ListView" Removed="True" />
+          <Item Id="MusterStation_ListView" Removed="True" />
+          <Item Id="Passenger_ListView" Removed="True" />
+          <Item Id="Season_ListView" Removed="True" />
+          <Item Id="SeasonVessel_ListView" Removed="True" />
+          <Item Id="SurvivalCraft_ListView" Removed="True" />
+          <Item Id="SurvivalCraftType_ListView" Removed="True" />
+          <Item Id="VesselLocation_ListView" Removed="True" />
+          <Item Id="VesselSide_ListView" Removed="True" />
+        </Items>
+      </Item>
+      <Item Id="Ship Configurations" Removed="True">
+        <Items>
+          <Item Id="Vessel_ListView" Removed="True" />
+        </Items>
+      </Item>
+      <Item Id="Ship Configurations/Vessel/" Removed="True">
+        <Items>
+          <Item Id="Deck_ListView" Removed="True" />
         </Items>
       </Item>
     </Items>
@@ -40,7 +140,7 @@
     <ListView Id="ApplicationUser_ListView" Caption="Users" />
     <DetailView Id="Crew_DetailView">
       <Items>
-        <PropertyEditor Id="Roles" Removed="True" />
+        <PropertyEditor Id="Roles" PropertyName="Roles" Caption="Crew Roles" IsNewNode="True" Removed="True" />
       </Items>
     </DetailView>
     <DetailView Id="Cruise_DetailView">

@@ -23,6 +23,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.CabinObjec
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects.VesselSafetyObjects;
 using DevExpress.Xpo;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
+using CruiseLineManagementEFCORE.Module.AppSecurity;
 
 namespace CruiseLineManagementEFCORE.Module.DatabaseUpdate;
 //https://localhost:44318/Vessel_DetailView/c9cbc4d1-666f-4d3b-ec47-08dd1304055e
@@ -57,10 +58,10 @@ public class Updater : ModuleUpdater {
         }
 
         // If a user named 'Admin' doesn't exist in the database, create this user
-        if(userManager.FindUserByName<ApplicationUser>(ObjectSpace, "SuperAdmin") == null) {
+        if(userManager.FindUserByName<BaseUser>(ObjectSpace, "SuperAdmin") == null) {
             // Set a password if the standard authentication type is used
             string EmptyPassword = "";
-            _ = userManager.CreateUser<ApplicationUser>(ObjectSpace, "SuperAdmin", EmptyPassword, (user) => {
+            _ = userManager.CreateUser<BaseUser>(ObjectSpace, "SuperAdmin", EmptyPassword, (user) => {
                 // Add the Administrators role to the user
                 user.Roles.Add(adminRole);
                 user.UserType = UserType.SuperAdmin;
@@ -73,27 +74,27 @@ public class Updater : ModuleUpdater {
     public override void UpdateDatabaseBeforeUpdateSchema() {
         base.UpdateDatabaseBeforeUpdateSchema();
     }
-    private PermissionPolicyRole CreateAdminRole() {
-        PermissionPolicyRole adminRole = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(r => r.Name == "GlobalAdministrators");
+    private BaseRole CreateAdminRole() {
+        BaseRole adminRole = ObjectSpace.FirstOrDefault<BaseRole>(r => r.Name == "GlobalAdministrators");
         if(adminRole == null) {
-            adminRole = ObjectSpace.CreateObject<PermissionPolicyRole>();
+            adminRole = ObjectSpace.CreateObject<BaseRole>();
             adminRole.Name = "GlobalAdministrators";
             adminRole.IsAdministrative = true;
 
         }
         return adminRole;
     }
-    private PermissionPolicyRole CreateDefaultRole() {
-        PermissionPolicyRole defaultRole = ObjectSpace.FirstOrDefault<PermissionPolicyRole>(role => role.Name == "DefaultGlobalRole");
+    private BaseRole CreateDefaultRole() {
+        BaseRole defaultRole = ObjectSpace.FirstOrDefault<BaseRole>(role => role.Name == "DefaultGlobalRole");
         if(defaultRole == null) {
-            defaultRole = ObjectSpace.CreateObject<PermissionPolicyRole>();
+            defaultRole = ObjectSpace.CreateObject<BaseRole>();
             defaultRole.Name = "DefaultGlobalRole";
 
             defaultRole.AddObjectPermissionFromLambda<GlobalUser>(SecurityOperations.Read, cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
             defaultRole.AddNavigationPermission(@"Application/NavigationItems/Items/Default/Items/MyDetails", SecurityPermissionState.Allow);
             defaultRole.AddMemberPermissionFromLambda<GlobalUser>(SecurityOperations.Write, "ChangePasswordOnFirstLogon", cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
             defaultRole.AddMemberPermissionFromLambda<GlobalUser>(SecurityOperations.Write, "StoredPassword", cm => cm.ID == (Guid)CurrentUserIdOperator.CurrentUserId(), SecurityPermissionState.Allow);
-            defaultRole.AddTypePermissionsRecursively<PermissionPolicyRole>(SecurityOperations.Read, SecurityPermissionState.Deny);
+            defaultRole.AddTypePermissionsRecursively<BaseRole>(SecurityOperations.Read, SecurityPermissionState.Deny);
             defaultRole.AddObjectPermission<ModelDifference>(SecurityOperations.ReadWriteAccess, "UserId = ToStr(CurrentUserId())", SecurityPermissionState.Allow);
             defaultRole.AddObjectPermission<ModelDifferenceAspect>(SecurityOperations.ReadWriteAccess, "Owner.UserId = ToStr(CurrentUserId())", SecurityPermissionState.Allow);
 			defaultRole.AddTypePermissionsRecursively<ModelDifference>(SecurityOperations.Create, SecurityPermissionState.Allow);
@@ -106,13 +107,13 @@ public class Updater : ModuleUpdater {
     }
 
   
-    private VesselRole CreateDefaultVesselRole(Vessel vessel)
+    private CrewRole CreateDefaultVesselRole(Vessel vessel)
     {
-        var roleexists = vessel.Roles.FirstOrDefault(r => r.Name == vessel.Name + "DefaultVesselRole");
+        var roleexists = vessel.CrewRoles.FirstOrDefault(r => r.Name == vessel.Name + "DefaultCrewRole");
         if (roleexists==null)
         {
-            var role = ObjectSpace.CreateObject<VesselRole>();
-            role.Name = vessel.Name+ "DefaultVesselRole";
+            var role = ObjectSpace.CreateObject<CrewRole>();
+            role.Name = vessel.Name+ "DefaultCrewRole";
             role.Vessel = vessel;
 
             //ApplicationUser
@@ -160,13 +161,13 @@ public class Updater : ModuleUpdater {
         
     }
 
-    private VesselRole CreateSYSADMINRole(Vessel vessel)
+    private CrewRole CreateSYSADMINRole(Vessel vessel)
     {
         
-        var roleexists = vessel.Roles.FirstOrDefault(r => r.Name ==vessel.Name+ "SysAdminRole");
+        var roleexists = vessel.CrewRoles.FirstOrDefault(r => r.Name ==vessel.Name+ "SysAdminRole");
         if (roleexists == null)
         {
-            var role = ObjectSpace.CreateObject<VesselRole>();
+            var role = ObjectSpace.CreateObject<CrewRole>();
             role.Name = vessel.Name +"SysAdminRole";
             role.Vessel = vessel;
 

@@ -14,9 +14,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace CruiseLineManagementEFCORE.Module.BusinessObjects
+namespace CruiseLineManagementEFCORE.Module.AppSecurity
 {
-    // Register this entity in your DbContext (usually in the BusinessObjects folder of your project) with the "public DbSet<GlobalUser> GlobalUsers { get; set; }" syntax.
+    // Register this entity in your DbContext (usually in the BusinessObjects folder of your project) with the "public DbSet<CrewRole> CrewRoles { get; set; }" syntax.
     [DefaultClassOptions]
     //[ImageName("BO_Contact")]
     //[DefaultProperty("Name")]
@@ -24,22 +24,17 @@ namespace CruiseLineManagementEFCORE.Module.BusinessObjects
     // Specify more UI options using a declarative approach (https://documentation.devexpress.com/#eXpressAppFramework/CustomDocument112701).
     // You do not need to implement the INotifyPropertyChanged interface - EF Core implements it automatically.
     // (see https://learn.microsoft.com/en-us/ef/core/change-tracking/change-detection#change-tracking-proxies for details).
-    public class GlobalUser : ApplicationUser
+    public class CrewRole : BaseRole
     {
-        public GlobalUser()
+        public CrewRole()
         {
             // In the constructor, initialize collection properties, e.g.: 
             // this.AssociatedEntities = new ObservableCollection<AssociatedEntityObject>();
         }
 
-        public override UserType UserType => UserType.GlobalUser;
-
-        public virtual string FirstName { get; set; }
-        public virtual string LastName { get; set; }
-        public virtual string Email { get; set; }
-        public virtual string PhoneNumber { get; set; }
-
-        public virtual ICollection<Vessel> AssignedVessels { get; set; } = new ObservableCollection<Vessel>();
-
+        [VisibleInDetailView(false)]
+        public override bool IsAdministrative { get => base.IsAdministrative; set => base.IsAdministrative = false; }
+        public virtual Guid VesselID { get; set; }
+        public virtual Vessel Vessel { get; set; }
     }
 }

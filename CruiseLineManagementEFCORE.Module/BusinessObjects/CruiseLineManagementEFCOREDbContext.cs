@@ -16,6 +16,7 @@ using CruiseLineManagementEFCORE.Module.BusinessObjects.PassengerObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.SalesObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CruisePortObjects;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.CrewObjects;
+using CruiseLineManagementEFCORE.Module.AppSecurity;
 
 namespace CruiseLineManagementEFCORE.Module.BusinessObjects;
 
@@ -48,11 +49,16 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
 	//public DbSet<ModuleInfo> ModulesInfo { get; set; }
 	public DbSet<ModelDifference> ModelDifferences { get; set; }
 	public DbSet<ModelDifferenceAspect> ModelDifferenceAspects { get; set; }
-	public DbSet<PermissionPolicyRole> Roles { get; set; }
+    //public DbSet<PermissionPolicyRole> Roles { get; set; }
     //public DbSet<VesselRole> VesselSpecificRoles { get; set; }
     //public DbSet<VesselUser> OnBoardUsers { get; set; }
-    public DbSet<CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUser> Users { get; set; }
-    public DbSet<CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUserLoginInfo> UserLoginInfos { get; set; }
+
+    public DbSet<GlobalUser> GlobalUsers { get; set; }
+    public DbSet<BaseRole> VesselRoles { get; set; }
+
+    public DbSet<BaseUser> Users { get; set; }
+    //public DbSet<CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUser> Users { get; set; }
+    public DbSet<BaseUserLoginInfo> UserLoginInfos { get; set; }
 	public DbSet<FileData> FileData { get; set; }
 	public DbSet<ReportDataV2> ReportDataV2 { get; set; }
 	public DbSet<KpiDefinition> KpiDefinition { get; set; }
@@ -70,8 +76,7 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
 
     public DbSet<Crew> Crews { get; set; }
 
-    public DbSet<GlobalUser> GlobalUsers { get; set; }
-    public DbSet<VesselRole> VesselRoles { get; set; }
+  
     public DbSet<Vessel> Vessels { get; set; }
     public DbSet<Deck> Decks { get; set; }
     public DbSet<VesselLocation> VesselLocations { get; set; }
@@ -233,9 +238,7 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
         modelBuilder.Entity<Vessel>()
             .HasMany(v => v.GlobalUsers)
             .WithMany(gu => gu.AssignedVessels);
-        modelBuilder.Entity<Vessel>()
-            .HasMany(v => v.Roles)
-            .WithOne(r => r.Vessel);
+
 
 
 
@@ -250,9 +253,7 @@ public class CruiseLineManagementEFCOREEFCoreDbContext : DbContext {
             .WithMany(v => v.Crews)
             .HasForeignKey(c => c.VesselID)
             .OnDelete(DeleteBehavior.NoAction);
-        modelBuilder.Entity<Crew>()
-            .HasMany(c => c.VesselRoles)
-            .WithMany(vr => vr.CrewMembers);
+       
 
 
 

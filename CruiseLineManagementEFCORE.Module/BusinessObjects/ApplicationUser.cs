@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using CruiseLineManagementEFCORE.Module.AppSecurity;
 using CruiseLineManagementEFCORE.Module.BusinessObjects.VesselObjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Security;
@@ -40,11 +41,4 @@ public class ApplicationUser : PermissionPolicyUser, ISecurityUserWithLoginInfo,
         result.User = this;
         return result;
     }
-}
-
-public enum UserType
-{
-    CrewMember,
-    GlobalUser,
-    SuperAdmin
 }

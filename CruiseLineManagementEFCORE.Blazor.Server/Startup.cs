@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.EntityFrameworkCore;
 using CruiseLineManagementEFCORE.Blazor.Server.Services;
 using DevExpress.Persistent.BaseImpl.EF.PermissionPolicy;
-using CruiseLineManagementEFCORE.Module.BusinessObjects;
+using CruiseLineManagementEFCORE.Module.AppSecurity;
 
 namespace CruiseLineManagementEFCORE.Blazor.Server;
 
@@ -96,15 +96,15 @@ public class Startup {
             builder.Security
                 .UseIntegratedMode(options => {
                     options.Lockout.Enabled = true;
-                    options.RoleType = typeof(VesselRole);
+                    options.RoleType = typeof(BaseRole);
                     
                     // ApplicationUser descends from PermissionPolicyUser and supports the OAuth authentication. For more information, refer to the following topic: https://docs.devexpress.com/eXpressAppFramework/402197
                     // If your application uses PermissionPolicyUser or a custom user type, set the UserType property as follows:
-                    options.UserType = typeof(CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUser);
+                    options.UserType = typeof(BaseUser);
                  
                     // ApplicationUserLoginInfo is only necessary for applications that use the ApplicationUser user type.
                     // If you use PermissionPolicyUser or a custom user type, comment out the following line:
-                    options.UserLoginInfoType = typeof(CruiseLineManagementEFCORE.Module.BusinessObjects.ApplicationUserLoginInfo);
+                    options.UserLoginInfoType = typeof(BaseUserLoginInfo);
                     options.Events.OnSecurityStrategyCreated += securityStrategy => {
                         // Use the 'PermissionsReloadMode.NoCache' option to load the most recent permissions from the database once
                         // for every DbContext instance when secured data is accessed through this instance for the first time.
